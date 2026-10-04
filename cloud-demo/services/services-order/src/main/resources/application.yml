@@ -1,0 +1,74 @@
+server:
+  port: 8000
+
+spring:
+  profiles:
+    active: dev
+    include: feign,rocketmq
+  application:
+    name: services-order
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      config:
+        namespace: ${spring.profiles.active:dev}
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true  #开启自动链接sentinel控制台
+      web-context-unify: false # 关闭上下文统一
+  datasource:
+    url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      # 连接的最大生命周期，建议设置为比 MySQL wait_timeout 少 30~60 秒（单位：毫秒）
+      # 例如 MySQL 默认 8小时(28800秒)，这里设为 28740000 毫秒
+      max-lifetime: 28740000
+      # 空闲连接超时时间（单位：毫秒），闲置超过该时间的连接会被回收
+      idle-timeout: 600000
+      # 连接保活心跳间隔（单位：毫秒），HikariCP 会定期发送心跳防止连接被 MySQL 杀掉（需 HikariCP 4.0+）
+      keepalive-time: 300000
+      # 获取连接的超时时间（单位：毫秒）
+      connection-timeout: 30000
+      # 验证连接有效性的超时时间（单位：毫秒）
+      validation-timeout: 5000
+      # 连接测试语句（高版本 MySQL 驱动通常不需要，但加上更稳妥）
+      connection-test-query: SELECT 1
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com.atguigu.order.feign: debug # feign包的日志级别
+
+---
+spring:
+  config:
+    import:
+      - nacos:common.properties?group=order
+      - nacos:database.properties?group=order
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    import:
+      - nacos:common.properties?group=order
+      - nacos:database.properties?group=order
+      - nacos:haha.properties?group=order
+    activate:
+      on-profile: test
+---
+spring:
+  config:
+    import:
+      - nacos:common.properties?group=order
+      - nacos:database.properties?group=order
+      - nacos:hehe.properties?group=order
+    activate:
+      on-profile: prod
+#---
+#mykey: hello

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.order.mapper.OrderTblMapper">
+
+    <insert id="insert" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="java.util.Map">
+        insert into order_tbl
+        (user_id,commodity_code)
+        values (
+                #{userId,jdbcType=VARCHAR},
+                #{commodityCode,jdbcType=VARCHAR}
+        )
+    </insert>
+
+</mapper>
